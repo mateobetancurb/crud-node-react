@@ -1,89 +1,65 @@
-import {
-	Box,
-	Heading,
-	FormControl,
-	FormErrorMessage,
-	Input,
-	Textarea,
-} from "@chakra-ui/react";
+import { useState } from "react";
+import { useGlobalState } from "../hooks/useGlobalState";
+
+import { categories } from "../helpers";
 
 const Form = () => {
+	const { quotesBook, setQuotesBook } = useGlobalState([]);
+
+	const initialFormData = {
+		author: "",
+		category: "",
+		quoteBook: "",
+	};
+
+	const [formData, setFormData] = useState(initialFormData);
+
+	const handleFieldChange = (fieldName, value) => {
+		setFormData((prevData) => ({
+			...prevData,
+			[fieldName]: value,
+		}));
+	};
+
+	const handleSaveQuote = () => {
+		console.log("Cita guardada:", formData);
+	};
+
 	return (
 		<>
-			<Box
-				bg="#2D3748"
-				w="40%"
-				h="-moz-max-content"
-				py={10}
-				px={10}
-				borderRadius={"3xl"}
-				mt={5}
-				ml="4"
-			>
-				<Heading as="h2" size="l" color="white" textAlign="center" mb={5}>
+			<div className="bg-[#2D3748] w-1/2 rounded-lg mx-3 p-5">
+				<h2 className="text-white text-center font-bold mb-5">
 					Comienza a guardar las frases de tu libro favorito
-				</Heading>
-				<FormControl isRequired>
-					<Input
+				</h2>
+				<form>
+					<input
+						onChange={(e) => handleFieldChange("author", e.target.value)}
+						value={formData.author}
+						className="block px-4 py-1 mb-4 w-full rounded-lg"
 						placeholder="Autor del libro"
-						variant="filled"
-						bg={"gray.300"}
-						color={"white"}
 					/>
-				</FormControl>
-				<FormControl isRequired>
-					<Input
-						placeholder="Categoría. Ej: romance, historia, ciencia ficción..."
-						mt={5}
-						variant="filled"
-						bg={"gray.300"}
-						color={"white"}
-					/>
-				</FormControl>
-				<FormControl isRequired>
-					<Textarea
+					<select className="mb-4 w-full py-1 px-4 rounded-lg">
+						<option>-- Selecciona una opción --</option>
+						{categories.map((item) => (
+							<option key={item.id} value={item.value}>
+								{item.value}
+							</option>
+						))}
+					</select>
+					<textarea
+						onChange={(e) => handleFieldChange("quoteBook", e.target.value)}
+						value={formData.quoteBook}
 						placeholder="Escribe aquí tu frase favorita"
-						mt={5}
-						variant="filled"
-						bg={"gray.300"}
-						color={"white"}
+						className="block w-full rounded-lg px-4 py-1 resize-none h-40 mb-5"
 					/>
-				</FormControl>
-				<FormControl isRequired>
-					<Box
-						as="button"
-						transition="all 0.2s cubic-bezier(.08,.52,.52,1)"
-						borderRadius="10px"
-						fontSize="15px"
-						fontWeight="semibold"
-						bg="#2D3748"
-						borderColor="#ccd0d5"
-						color="#fff"
-						marginTop="20px"
-						height="40px"
-						width="100%"
-						padding="5px"
-						border="1px solid white"
-						_hover={{ bg: "#ebedf0", color: "#2D3748" }}
-						_active={{
-							bg: "#dddfe2",
-							transform: "scale(0.98)",
-							borderColor: "#bec3c9",
-						}}
-						_focus={{
-							boxShadow:
-								"0 0 1px 2px rgba(88, 144, 255, .75), 0 1px 1px rgba(0, 0, 0, .15)",
-						}}
-						_disabled={{
-							bg: "#dddfe2",
-							color: "#2D3748",
-							cursor: "not-allowed",
-						}}
+					<button
+						onClick={handleSaveQuote}
+						className="bg-[#1a202c] text-white w-full py-2 rounded-full shadow-lg hover:bg-[#1e232c] transition-colors"
 					>
 						Guardar frase
-					</Box>
-				</FormControl>
-			</Box>
+					</button>
+				</form>
+			</div>
 		</>
 	);
 };
