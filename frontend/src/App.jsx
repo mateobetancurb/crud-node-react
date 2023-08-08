@@ -1,11 +1,14 @@
 import { Header } from "./components/Header";
 import { Form } from "./components/Form";
+import { AppProvider } from "./context/AppProvider";
 
 const App = () => {
 	return (
 		<>
-			<Header />
-			<Form />
+			<AppProvider>
+				<Header />
+				<Form />
+			</AppProvider>
 		</>
 	);
 };
