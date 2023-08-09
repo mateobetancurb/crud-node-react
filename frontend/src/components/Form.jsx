@@ -1,67 +1,101 @@
-import { useState } from "react";
+import { Formik, Form, Field, ErrorMessage } from "formik";
+import * as Yup from "yup";
 import { useGlobalState } from "../hooks/useGlobalState";
-
 import { categories } from "../helpers";
 
-const Form = () => {
-	const { quotesBook, setQuotesBook } = useGlobalState([]);
+const QuoteSchema = Yup.object().shape({
+	author: Yup.string()
+		.min(5, "Mínimo 5 caracteres")
+		.required("Escribe el nombre del autor"),
+	category: Yup.string().required("Selecciona una categoría"),
+	quoteBook: Yup.string()
+		.min(10, "Mínimo 10 caracteres")
+		.required("Escribe la frase que más te gustó"),
+});
 
-	const initialFormData = {
-		author: "",
-		category: "",
-		quoteBook: "",
-	};
+const MyForm = () => {
+	const { quotesBook, setQuotesBook } = useGlobalState();
 
-	const [formData, setFormData] = useState(initialFormData);
-
-	const handleFieldChange = (fieldName, value) => {
-		setFormData((prevData) => ({
-			...prevData,
-			[fieldName]: value,
-		}));
-	};
-
-	const handleSaveQuote = () => {
-		console.log("Cita guardada:", formData);
+	const handleSaveQuote = (values, { resetForm, setSubmitting }) => {
+		console.log("Cita guardada:", values);
+		// TODO: save data from form
+		resetForm();
+		setSubmitting(false);
 	};
 
 	return (
-		<>
-			<div className="bg-[#2D3748] w-1/2 rounded-lg mx-3 p-5">
-				<h2 className="text-white text-center font-bold mb-5">
-					Comienza a guardar las frases de tu libro favorito
-				</h2>
-				<form>
-					<input
-						onChange={(e) => handleFieldChange("author", e.target.value)}
-						value={formData.author}
-						className="block px-4 py-1 mb-4 w-full rounded-lg"
-						placeholder="Autor del libro"
-					/>
-					<select className="mb-4 w-full py-1 px-4 rounded-lg">
-						<option>-- Selecciona una opción --</option>
-						{categories.map((item) => (
-							<option key={item.id} value={item.value}>
-								{item.value}
-							</option>
-						))}
-					</select>
-					<textarea
-						onChange={(e) => handleFieldChange("quoteBook", e.target.value)}
-						value={formData.quoteBook}
-						placeholder="Escribe aquí tu frase favorita"
-						className="block w-full rounded-lg px-4 py-1 resize-none h-40 mb-5"
-					/>
-					<button
-						onClick={handleSaveQuote}
-						className="bg-[#1a202c] text-white w-full py-2 rounded-full shadow-lg hover:bg-[#1e232c] transition-colors"
-					>
-						Guardar frase
-					</button>
-				</form>
-			</div>
-		</>
+		<div className="bg-[#2D3748] w-1/3 rounded-lg mx-3 p-5">
+			<h2 className="text-white text-center font-bold mb-5">
+				Comienza a guardar las frases de tu libro favorito
+			</h2>
+			<Formik
+				initialValues={{
+					author: "",
+					category: "",
+					quoteBook: "",
+				}}
+				validationSchema={QuoteSchema}
+				onSubmit={handleSaveQuote}
+			>
+				{({ isValid, isSubmitting }) => (
+					<Form>
+						<ErrorMessage
+							name="author"
+							component="p"
+							className="text-red-500 mb-1"
+						/>
+						<Field
+							name="author"
+							className="block px-4 py-2 mb-4 w-full rounded-lg"
+							placeholder="Autor del libro"
+						/>
+
+						<ErrorMessage
+							name="category"
+							component="p"
+							className="text-red-500 mb-1"
+						/>
+						<Field
+							as="select"
+							name="category"
+							className="mb-4 w-full py-2 px-4 rounded-lg"
+						>
+							<option value="">-- Selecciona una opción --</option>
+							{categories.map((item) => (
+								<option key={item.id} value={item.value}>
+									{item.value}
+								</option>
+							))}
+						</Field>
+
+						<ErrorMessage
+							name="quoteBook"
+							component="p"
+							className="text-red-500 mb-1"
+						/>
+						<Field
+							as="textarea"
+							name="quoteBook"
+							placeholder="Escribe aquí tu frase favorita"
+							className="block w-full rounded-lg px-4 py-1 resize-none h-40 mb-5"
+						/>
+
+						<button
+							type="submit"
+							className={`bg-[#1a202c] text-white w-full py-2 rounded-full shadow-lg ${
+								!isValid
+									? "bg-[#1a202c] text-gray-600"
+									: "hover:bg-[#1e232c] transition-colors"
+							}`}
+							disabled={isSubmitting || !isValid}
+						>
+							Guardar frase
+						</button>
+					</Form>
+				)}
+			</Formik>
+		</div>
 	);
 };
 
-export { Form };
+export { MyForm as Form };
