@@ -17,8 +17,11 @@ const MyForm = () => {
 	const { quotesBook, setQuotesBook } = useGlobalState();
 
 	const handleSaveQuote = (values, { resetForm, setSubmitting }) => {
-		console.log("Cita guardada:", values);
-		// TODO: save data from form
+		const newQuote = {
+			id: quotesBook.length + 1,
+			...values,
+		};
+		setQuotesBook([...quotesBook, newQuote]);
 		resetForm();
 		setSubmitting(false);
 	};
@@ -84,7 +87,7 @@ const MyForm = () => {
 							type="submit"
 							className={`bg-[#1a202c] text-white w-full py-2 rounded-full shadow-lg ${
 								!isValid
-									? "bg-[#1a202c] text-gray-600"
+									? "bg-[#1a202c] text-gray-700"
 									: "hover:bg-[#1e232c] transition-colors"
 							}`}
 							disabled={isSubmitting || !isValid}
