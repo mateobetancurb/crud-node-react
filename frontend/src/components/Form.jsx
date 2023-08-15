@@ -1,4 +1,5 @@
 import { Formik, Form, Field, ErrorMessage } from "formik";
+import toast, { Toaster } from "react-hot-toast";
 import * as Yup from "yup";
 import { useGlobalState } from "../hooks/useGlobalState";
 import { categories } from "../helpers";
@@ -22,12 +23,13 @@ const MyForm = () => {
 			...values,
 		};
 		setQuotesBook([...quotesBook, newQuote]);
+		toast.success("¡Frase guardada!");
 		resetForm();
 		setSubmitting(false);
 	};
 
 	return (
-		<div className="bg-[#2D3748] w-1/3 rounded-lg mx-3 p-5">
+		<div className="bg-[#2D3748] rounded-lg mx-3 py-8 px-5">
 			<h2 className="text-white text-center font-bold mb-5">
 				Comienza a guardar las frases de tu libro favorito
 			</h2>
@@ -94,6 +96,7 @@ const MyForm = () => {
 						>
 							Guardar frase
 						</button>
+						<Toaster position="top-center" />
 					</Form>
 				)}
 			</Formik>
