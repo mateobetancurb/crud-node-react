@@ -1,5 +1,6 @@
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import toast, { Toaster } from "react-hot-toast";
+import axios from "axios";
 import * as Yup from "yup";
 import { useGlobalState } from "../hooks/useGlobalState";
 import { categories } from "../helpers";
@@ -15,17 +16,23 @@ const QuoteSchema = Yup.object().shape({
 });
 
 const MyForm = () => {
-	const { quotesBook, setQuotesBook } = useGlobalState();
+	const { quotesBook } = useGlobalState();
 
-	const handleSaveQuote = (values, { resetForm, setSubmitting }) => {
-		const newQuote = {
-			id: quotesBook.length + 1,
-			...values,
-		};
-		setQuotesBook([...quotesBook, newQuote]);
-		toast.success("¡Frase guardada!");
-		resetForm();
-		setSubmitting(false);
+	const handleSaveQuote = async (values, { resetForm, setSubmitting }) => {
+		try {
+			const newQuote = {
+				id: quotesBook.length + 1,
+				...values,
+			};
+			const url = import.meta.env.VITE_BACKEND_URL;
+			await axios.post(`${url}/create-quote`, newQuote);
+			toast.success("¡Frase guardada!");
+		} catch (error) {
+			console.log(error);
+		} finally {
+			resetForm();
+			setSubmitting(false);
+		}
 	};
 
 	return (
