@@ -1,8 +1,9 @@
 const { Router } = require("express");
 const router = Router();
 
-const { getTasks } = require("../controllers/appController");
+const { getQuotes, createQuote } = require("../controllers/appController");
 
-router.get("/", getTasks);
+router.get("/get-quotes", getQuotes);
+router.post("/create-quote", createQuote);
 
 module.exports = router;
