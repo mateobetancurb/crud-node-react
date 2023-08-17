@@ -1,8 +1,7 @@
 import { useGlobalState } from "../hooks/useGlobalState";
 
 const QuoteList = () => {
-	const { quotesBook, setQuotesBook } = useGlobalState();
-	console.log(quotesBook);
+	const { quotesBook } = useGlobalState();
 
 	return (
 		<>
