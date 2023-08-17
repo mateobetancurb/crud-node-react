@@ -3,7 +3,7 @@ import toast, { Toaster } from "react-hot-toast";
 import axios from "axios";
 import * as Yup from "yup";
 import { useGlobalState } from "../hooks/useGlobalState";
-import { categories } from "../helpers";
+import { categories, generateRandomId } from "../helpers";
 
 const QuoteSchema = Yup.object().shape({
 	author: Yup.string()
@@ -16,14 +16,15 @@ const QuoteSchema = Yup.object().shape({
 });
 
 const MyForm = () => {
-	const { quotesBook } = useGlobalState();
+	const { quotesBook, setQuotesBook } = useGlobalState();
 
 	const handleSaveQuote = async (values, { resetForm, setSubmitting }) => {
 		try {
 			const newQuote = {
-				id: quotesBook.length + 1,
+				id: generateRandomId(),
 				...values,
 			};
+			setQuotesBook([...quotesBook, newQuote]);
 			const url = import.meta.env.VITE_BACKEND_URL;
 			await axios.post(`${url}/create-quote`, newQuote);
 			toast.success("¡Frase guardada!");
