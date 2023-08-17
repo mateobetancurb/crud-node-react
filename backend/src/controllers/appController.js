@@ -5,7 +5,6 @@ const getQuotes = async (req, res) => {
 		const connection = await db();
 		const [quotes, _] = await connection.query("SELECT * FROM quotes");
 		res.json(quotes);
-		connection.end();
 	} catch (error) {
 		console.error("Error getting quotes:", error);
 		res.status(500).json({ error: "Something went wrong" });
@@ -20,7 +19,6 @@ const createQuote = async (req, res) => {
 			"INSERT INTO quotes (id, author, category, quoteBook) VALUES (?, ?, ?, ?)",
 			[id, author, category, quoteBook]
 		);
-		connection.end();
 		res.json({ status: 200, message: "Quote created successfully" });
 	} catch (error) {
 		console.error("Error creating quote:", error);
@@ -28,7 +26,20 @@ const createQuote = async (req, res) => {
 	}
 };
 
+const deleteQuote = async (req, res) => {
+	const { id } = req.params;
+	try {
+		const connection = await db();
+		await connection.query("DELETE FROM quotes WHERE id = ?", [id]);
+		res.json({ status: 200, message: `The quote with id: ${id} was deleted` });
+	} catch (error) {
+		console.log(error);
+		res.status(500).json({ error: "Something went wrong" });
+	}
+};
+
 module.exports = {
 	getQuotes,
 	createQuote,
+	deleteQuote,
 };
