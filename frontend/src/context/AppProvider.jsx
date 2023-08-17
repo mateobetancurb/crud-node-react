@@ -21,8 +21,6 @@ const AppProvider = ({ children }) => {
 		getDataFromBackendApi();
 	}, []);
 
-	console.log(quotesBook);
-
 	return (
 		<AppContext.Provider value={{ quotesBook, setQuotesBook }}>
 			{children}
