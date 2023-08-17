@@ -1,7 +1,8 @@
+import { Toaster } from "react-hot-toast";
 import { useGlobalState } from "../hooks/useGlobalState";
 
 const QuoteList = () => {
-	const { quotesBook } = useGlobalState();
+	const { quotesBook, deleteQuote } = useGlobalState();
 
 	return (
 		<>
@@ -28,7 +29,10 @@ const QuoteList = () => {
 								</span>
 							</div>
 							<div className="flex flex-row gap-5">
-								<button className="hover:bg-gray-600 p-2 rounded-full transition-colors">
+								<button
+									onClick={() => deleteQuote(quote.id)}
+									className="hover:bg-gray-600 p-2 rounded-full transition-colors"
+								>
 									<svg
 										xmlns="http://www.w3.org/2000/svg"
 										fill="none"
@@ -80,6 +84,7 @@ const QuoteList = () => {
 						</div>
 					))}
 				</div>
+				<Toaster position="top-center" />
 			</section>
 		</>
 	);
