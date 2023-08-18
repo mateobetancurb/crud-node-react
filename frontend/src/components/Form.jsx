@@ -16,18 +16,39 @@ const QuoteSchema = Yup.object().shape({
 });
 
 const MyForm = () => {
-	const { quotesBook, setQuotesBook, quoteToUpdate } = useGlobalState();
+	const {
+		quotesBook,
+		setQuotesBook,
+		quoteToUpdate,
+		setUptatedQuote,
+		editQuote,
+	} = useGlobalState();
 
 	const handleSaveQuote = async (values, { resetForm, setSubmitting }) => {
 		try {
-			const newQuote = {
-				id: generateRandomId(),
-				...values,
-			};
-			setQuotesBook([...quotesBook, newQuote]);
-			const url = import.meta.env.VITE_BACKEND_URL;
-			await axios.post(`${url}/create-quote`, newQuote);
-			toast.success("¡Frase guardada!");
+			if (Object.keys(quoteToUpdate).length > 0) {
+				const editedQuote = {
+					...quoteToUpdate,
+					...values,
+				};
+				setQuotesBook(
+					quotesBook.map((quote) =>
+						quote.id === editedQuote.id ? editedQuote : quote
+					)
+				);
+				resetForm();
+				setUptatedQuote(editedQuote);
+				editQuote(editedQuote);
+			} else {
+				const newQuote = {
+					id: generateRandomId(),
+					...values,
+				};
+				setQuotesBook([...quotesBook, newQuote]);
+				const url = import.meta.env.VITE_BACKEND_URL;
+				await axios.post(`${url}/create-quote`, newQuote);
+				toast.success("¡Frase guardada!");
+			}
 		} catch (error) {
 			console.log(error);
 		} finally {
