@@ -26,6 +26,22 @@ const createQuote = async (req, res) => {
 	}
 };
 
+const editQuote = async (req, res) => {
+	const { author, category, quoteBook } = req.body;
+	const { id } = req.params;
+	try {
+		const connection = await db();
+		await connection.query("UPDATE quotes SET ? WHERE id = ?", [
+			{ author, category, quoteBook },
+			id,
+		]);
+		res.json({ status: 200, message: `The quote with id: ${id} was updated` });
+	} catch (error) {
+		console.log(error);
+		res.status(500).json({ message: "Something went wrong" });
+	}
+};
+
 const deleteQuote = async (req, res) => {
 	const { id } = req.params;
 	try {
@@ -41,5 +57,6 @@ const deleteQuote = async (req, res) => {
 module.exports = {
 	getQuotes,
 	createQuote,
+	editQuote,
 	deleteQuote,
 };
