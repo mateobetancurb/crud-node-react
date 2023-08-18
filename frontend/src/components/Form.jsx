@@ -16,7 +16,7 @@ const QuoteSchema = Yup.object().shape({
 });
 
 const MyForm = () => {
-	const { quotesBook, setQuotesBook } = useGlobalState();
+	const { quotesBook, setQuotesBook, quoteToUpdate } = useGlobalState();
 
 	const handleSaveQuote = async (values, { resetForm, setSubmitting }) => {
 		try {
@@ -36,16 +36,39 @@ const MyForm = () => {
 		}
 	};
 
+	const renderFormTitle = () => {
+		if (Object.keys(quoteToUpdate).length > 0) {
+			return (
+				<h2 className="text-white text-center font-bold mb-5">
+					¿Te faltó algo? Edítalo y guárdalo nuevamente
+				</h2>
+			);
+		} else {
+			return (
+				<h2 className="text-white text-center font-bold mb-5">
+					Comienza a guardar las frases de tu libro favorito
+				</h2>
+			);
+		}
+	};
+
+	const renderButtonFormTitle = () => {
+		if (Object.keys(quoteToUpdate).length > 0) {
+			return "Editar frase";
+		} else {
+			return "Guardar frase";
+		}
+	};
+
 	return (
 		<div className="bg-[#2D3748] rounded-lg mx-3 py-8 px-5">
-			<h2 className="text-white text-center font-bold mb-5">
-				Comienza a guardar las frases de tu libro favorito
-			</h2>
+			{renderFormTitle()}
 			<Formik
+				enableReinitialize
 				initialValues={{
-					author: "",
-					category: "",
-					quoteBook: "",
+					author: quoteToUpdate.author || "",
+					category: quoteToUpdate.category || "",
+					quoteBook: quoteToUpdate.quoteBook || "",
 				}}
 				validationSchema={QuoteSchema}
 				onSubmit={handleSaveQuote}
@@ -102,7 +125,7 @@ const MyForm = () => {
 							}`}
 							disabled={isSubmitting || !isValid}
 						>
-							Guardar frase
+							{renderButtonFormTitle()}
 						</button>
 						<Toaster position="top-center" />
 					</Form>
