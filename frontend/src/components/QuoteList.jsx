@@ -2,7 +2,7 @@ import { Toaster } from "react-hot-toast";
 import { useGlobalState } from "../hooks/useGlobalState";
 
 const QuoteList = () => {
-	const { quotesBook, deleteQuote } = useGlobalState();
+	const { quotesBook, deleteQuote, getQuoteToUpdate } = useGlobalState();
 
 	return (
 		<>
@@ -48,7 +48,10 @@ const QuoteList = () => {
 										/>
 									</svg>
 								</button>
-								<button className="hover:bg-gray-600 p-2 rounded-full transition-colors">
+								<button
+									onClick={() => getQuoteToUpdate(quote)}
+									className="hover:bg-gray-600 p-2 rounded-full transition-colors"
+								>
 									<svg
 										xmlns="http://www.w3.org/2000/svg"
 										fill="none"
