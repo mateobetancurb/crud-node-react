@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import toast, { Toaster } from "react-hot-toast";
 import axios from "axios";
@@ -24,6 +25,20 @@ const MyForm = () => {
 		editQuote,
 	} = useGlobalState();
 
+	const [initialFormValues, setInitialFormValues] = useState({
+		author: "",
+		category: "",
+		quoteBook: "",
+	});
+
+	useEffect(() => {
+		setInitialFormValues({
+			author: quoteToUpdate.author || "",
+			category: quoteToUpdate.category || "",
+			quoteBook: quoteToUpdate.quoteBook || "",
+		});
+	}, [quoteToUpdate]);
+
 	const handleSaveQuote = async (values, { resetForm, setSubmitting }) => {
 		try {
 			if (Object.keys(quoteToUpdate).length > 0) {
@@ -36,7 +51,6 @@ const MyForm = () => {
 						quote.id === editedQuote.id ? editedQuote : quote
 					)
 				);
-				resetForm();
 				setUptatedQuote(editedQuote);
 				editQuote(editedQuote);
 			} else {
@@ -54,6 +68,11 @@ const MyForm = () => {
 		} finally {
 			resetForm();
 			setSubmitting(false);
+			setInitialFormValues({
+				author: "",
+				category: "",
+				quoteBook: "",
+			});
 		}
 	};
 
@@ -86,11 +105,7 @@ const MyForm = () => {
 			{renderFormTitle()}
 			<Formik
 				enableReinitialize
-				initialValues={{
-					author: quoteToUpdate.author || "",
-					category: quoteToUpdate.category || "",
-					quoteBook: quoteToUpdate.quoteBook || "",
-				}}
+				initialValues={initialFormValues}
 				validationSchema={QuoteSchema}
 				onSubmit={handleSaveQuote}
 			>
