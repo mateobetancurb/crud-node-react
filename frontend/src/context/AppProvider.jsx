@@ -5,7 +5,11 @@ import axios from "axios";
 const AppContext = createContext();
 
 const AppProvider = ({ children }) => {
-	const [quotesBook, setQuotesBook] = useState([]);
+	const [quotesBook, setQuotesBook] = useState(
+		localStorage.getItem("quotes")
+			? JSON.parse(localStorage.getItem("quotes"))
+			: []
+	);
 	const [quoteToUpdate, setQuoteToUpdate] = useState({});
 	const [updatedQuote, setUptatedQuote] = useState({});
 
@@ -22,11 +26,12 @@ const AppProvider = ({ children }) => {
 
 	const deleteQuote = async (id) => {
 		try {
-			const url = import.meta.env.VITE_BACKEND_URL;
-			await axios.delete(`${url}/delete-quote/${id}`);
+			// const url = import.meta.env.VITE_BACKEND_URL;
+			// await axios.delete(`${url}/delete-quote/${id}`);
 
 			const filteredItems = quotesBook.filter((quote) => quote.id !== id);
 			setQuotesBook(filteredItems);
+			localStorage.setItem("quotes", JSON.stringify(filteredItems));
 
 			toast.success("La frase fue eliminada correctamente", {
 				id: "clipboard",
@@ -51,8 +56,15 @@ const AppProvider = ({ children }) => {
 				id: "edit-success",
 				duration: 4500,
 			});
-			const url = import.meta.env.VITE_BACKEND_URL;
-			await axios.put(`${url}/update-quote/${editedQuote.id}`, editedQuote);
+
+			const editedQuotes = quotesBook.map((quote) =>
+				quote.id === editedQuote.id ? editedQuote : quote
+			);
+			setQuotesBook(editedQuotes);
+			localStorage.setItem("quotes", JSON.stringify(editedQuotes));
+
+			// const url = import.meta.env.VITE_BACKEND_URL;
+			// await axios.put(`${url}/update-quote/${editedQuote.id}`, editedQuote);
 		} catch (error) {
 			console.error("There is an error with HTTP PUT method:", error);
 			toast.error("No se pudo editar la frase. Inténtalo nuevamente.", {
