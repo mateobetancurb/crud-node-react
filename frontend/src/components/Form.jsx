@@ -70,7 +70,7 @@ const MyForm = () => {
 		} catch (error) {
 			console.log(error);
 		} finally {
-			// resetForm();
+			resetForm();
 			setSubmitting(false);
 			setInitialFormValues({
 				author: "",
