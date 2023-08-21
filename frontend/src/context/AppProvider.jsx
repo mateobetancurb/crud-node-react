@@ -13,16 +13,16 @@ const AppProvider = ({ children }) => {
 	const [quoteToUpdate, setQuoteToUpdate] = useState({});
 	const [updatedQuote, setUptatedQuote] = useState({});
 
-	const getDataFromBackendApi = async () => {
-		try {
-			const { data } = await axios.get(
-				`${import.meta.env.VITE_BACKEND_URL}/get-quotes`
-			);
-			setQuotesBook(data);
-		} catch (error) {
-			console.log(error);
-		}
-	};
+	// const getDataFromBackendApi = async () => {
+	// 	try {
+	// 		const { data } = await axios.get(
+	// 			`${import.meta.env.VITE_BACKEND_URL}/get-quotes`
+	// 		);
+	// 		setQuotesBook(data);
+	// 	} catch (error) {
+	// 		console.log(error);
+	// 	}
+	// };
 
 	const deleteQuote = async (id) => {
 		try {
@@ -74,9 +74,9 @@ const AppProvider = ({ children }) => {
 		}
 	};
 
-	useEffect(() => {
-		getDataFromBackendApi();
-	}, []);
+	// useEffect(() => {
+	// 	getDataFromBackendApi();
+	// }, []);
 
 	return (
 		<AppContext.Provider
