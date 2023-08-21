@@ -59,14 +59,18 @@ const MyForm = () => {
 					...values,
 				};
 				setQuotesBook([...quotesBook, newQuote]);
-				const url = import.meta.env.VITE_BACKEND_URL;
-				await axios.post(`${url}/create-quote`, newQuote);
+				localStorage.setItem(
+					"quotes",
+					JSON.stringify([...quotesBook, newQuote])
+				);
+				// const url = import.meta.env.VITE_BACKEND_URL;
+				// await axios.post(`${url}/create-quote`, newQuote);
 				toast.success("¡Frase guardada!");
 			}
 		} catch (error) {
 			console.log(error);
 		} finally {
-			resetForm();
+			// resetForm();
 			setSubmitting(false);
 			setInitialFormValues({
 				author: "",
