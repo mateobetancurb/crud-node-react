@@ -7,11 +7,11 @@ const QuoteList = () => {
 	return (
 		<>
 			{quotesBook.length > 0 ? (
-				<section className="bg-[#2D3748]  rounded-lg mx-3 p-5 overflow-y-auto h-[450px]">
-					<h2 className="text-white text-center font-bold mb-5 fixed top-25 left-[575px] py-3 w-[50%] px-3 rounded-full bg-[#1a202c]  ">
+				<section className="bg-[#2D3748] rounded-lg mx-3 p-5 overflow-y-auto h-[450px]">
+					<h2 className="text-white text-center font-bold px-3 rounded-full ">
 						Aquí están tus frases guardadas
 					</h2>
-					<div className=" mt-[70px]">
+					<div className=" mt-10">
 						{quotesBook.map((quote) => (
 							<div
 								key={quote.id}
